@@ -1,3 +1,47 @@
+19-JUN-2020: 4.2.0
+
+- Adds ghost preview in mxVertexHandler
+- Makes mxHandle.positionChanged optional
+- Executes bottom to top before top to bottom in mxLayoutManager
+- Adds selection handling for cell hierarchies
+- Adds event transparency for filled swimlane content
+- Adds mxSelectionCellsHandler.isHandled
+- Adds mxGraph.getCellToSelect
+- Adds mxGraphHandler.isPropagateSelectionCell
+- Removes mxClient.IOS_VERSION and workaround for event handling
+- Fixes mxClient.IS_SF for iframe
+- Adds optional textWidth for mxGraph.getPreferredSizeForCell
+- Adds vertical switch for mxLine
+- Adds mxLayoutManager.hasLayout hook
+- Adds optional shape argument in mxHandle
+- Adds mxGraphHandler.getHandledSelectionCells
+- Adds mxVertexHandler.getSizerBounds, isParentHighlightVisible, getSelectionBorderBounds
+
+31-MAR-2020: 4.1.1
+
+- Fixes use of userAgent to detect browsers and platforms
+- Reduces number of layout runs in mxLayoutManager
+- Adds resizeCell in mxGraphLayout
+- Adds eventName in mxLayoutManager.getLayout
+- Uses all layers in getSwimlaneAt
+- Fixes update of indicator shape after style change
+- Adds support for referenced font colors
+
+24-JAN-2020: 4.1.0
+
+- Adds mxEdgeHandler.isCellEnabled
+- Enables reflow in HTML output
+- Fixes mxUtils.equalPoints
+- Fixes event handling for desktop mode in mobile Safari
+- Adds mxGraph.snapDelta, uses raster for moving cells
+- Adds optional cells argument in mxGraphHandler.start
+- Fixes mxGraph.sizeDidChange for negative coordinates
+- Allows for corner rotation in mxVertexHandler
+- Adds mxGraphHandler.suspend and resume
+- Fixes moving and resizing on iOS 13
+- Adds mxSvgCanvas2D.addForeignObject
+- Adds mxClient.IOS_VERSION
+
 08-NOV-2019: 4.0.6
 
 - New vagrant build system
@@ -16,7 +60,7 @@
 - Adds mxGraphHandler.maxLivePreview
 - Adds mxGuide.isStateIgnored hook
 
-20-JUL-2019: 4.0.4
+20-AUG-2019: 4.0.4
 
 - Moved PHP code to own repo
 - Adds DPI support in advanced dialog

@@ -20,9 +20,9 @@ var mxClient =
 	 * 
 	 * versionMajor.versionMinor.buildNumber.revisionNumber
 	 * 
-	 * Current version is 4.0.6.
+	 * Current version is 4.2.0.
 	 */
-	VERSION: '4.0.6',
+	VERSION: '4.2.0',
 
 	/**
 	 * Variable: IS_IE
@@ -30,35 +30,36 @@ var mxClient =
 	 * True if the current browser is Internet Explorer 10 or below. Use <mxClient.IS_IE11>
 	 * to detect IE 11.
 	 */
-	IS_IE: navigator.userAgent.indexOf('MSIE') >= 0,
+	IS_IE: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE') >= 0,
 
 	/**
 	 * Variable: IS_IE6
 	 *
 	 * True if the current browser is Internet Explorer 6.x.
 	 */
-	IS_IE6: navigator.userAgent.indexOf('MSIE 6') >= 0,
+	IS_IE6: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE 6') >= 0,
 
 	/**
 	 * Variable: IS_IE11
 	 *
 	 * True if the current browser is Internet Explorer 11.x.
 	 */
-	IS_IE11: !!navigator.userAgent.match(/Trident\/7\./),
+	IS_IE11: navigator.userAgent != null && !!navigator.userAgent.match(/Trident\/7\./),
 
 	/**
 	 * Variable: IS_EDGE
 	 *
 	 * True if the current browser is Microsoft Edge.
 	 */
-	IS_EDGE: !!navigator.userAgent.match(/Edge\//),
+	IS_EDGE: navigator.userAgent != null && !!navigator.userAgent.match(/Edge\//),
 
 	/**
 	 * Variable: IS_QUIRKS
 	 *
 	 * True if the current browser is Internet Explorer and it is in quirks mode.
 	 */
-	IS_QUIRKS: navigator.userAgent.indexOf('MSIE') >= 0 && (document.documentMode == null || document.documentMode == 5),
+	IS_QUIRKS: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE') >= 0 &&
+		(document.documentMode == null || document.documentMode == 5),
 
 	/**
 	 * Variable: IS_EM
@@ -86,7 +87,8 @@ var mxClient =
 	 *
 	 * True if the current browser is Netscape (including Firefox).
 	 */
-  	IS_NS: navigator.userAgent.indexOf('Mozilla/') >= 0 &&
+  	IS_NS: navigator.userAgent != null &&
+  		navigator.userAgent.indexOf('Mozilla/') >= 0 &&
   		navigator.userAgent.indexOf('MSIE') < 0 &&
   		navigator.userAgent.indexOf('Edge/') < 0,
 
@@ -95,8 +97,9 @@ var mxClient =
 	 *
 	 * True if the current browser is Opera.
 	 */
-  	IS_OP: navigator.userAgent.indexOf('Opera/') >= 0 ||
-  		navigator.userAgent.indexOf('OPR/') >= 0,
+  	IS_OP: navigator.userAgent != null &&
+  		(navigator.userAgent.indexOf('Opera/') >= 0 ||
+  		navigator.userAgent.indexOf('OPR/') >= 0),
 
 	/**
 	 * Variable: IS_OT
@@ -104,7 +107,8 @@ var mxClient =
 	 * True if -o-transform is available as a CSS style, ie for Opera browsers
 	 * based on a Presto engine with version 2.5 or later.
 	 */
-  	IS_OT: navigator.userAgent.indexOf('Presto/') >= 0 &&
+  	IS_OT: navigator.userAgent != null &&
+  		navigator.userAgent.indexOf('Presto/') >= 0 &&
   		navigator.userAgent.indexOf('Presto/2.4.') < 0 &&
   		navigator.userAgent.indexOf('Presto/2.3.') < 0 &&
   		navigator.userAgent.indexOf('Presto/2.2.') < 0 &&
@@ -117,24 +121,28 @@ var mxClient =
 	 *
 	 * True if the current browser is Safari.
 	 */
-  	IS_SF: navigator.userAgent.indexOf('AppleWebKit/') >= 0 &&
-  		navigator.userAgent.indexOf('Chrome/') < 0 &&
-  		navigator.userAgent.indexOf('Edge/') < 0,
-  	
+  	IS_SF: /Apple Computer, Inc/.test(navigator.vendor),
+
+	/**
+	 * Variable: IS_ANDROID
+	 * 
+	 * Returns true if the user agent contains Android.
+	 */
+  	IS_ANDROID: navigator.appVersion.indexOf('Android') >= 0,
+
 	/**
 	 * Variable: IS_IOS
 	 * 
 	 * Returns true if the user agent is an iPad, iPhone or iPod.
 	 */
-  	IS_IOS: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
-  		
+  	IS_IOS: (/iP(hone|od|ad)/.test(navigator.platform)),
+
 	/**
 	 * Variable: IS_GC
 	 *
 	 * True if the current browser is Google Chrome.
 	 */
-  	IS_GC: navigator.userAgent.indexOf('Chrome/') >= 0 &&
-		navigator.userAgent.indexOf('Edge/') < 0,
+  	IS_GC: /Google Inc/.test(navigator.vendor),
 	
 	/**
 	 * Variable: IS_CHROMEAPP
@@ -148,7 +156,7 @@ var mxClient =
 	 *
 	 * True if the current browser is Firefox.
 	 */
-  	IS_FF: navigator.userAgent.indexOf('Firefox/') >= 0,
+  	IS_FF: typeof InstallTrigger !== 'undefined',
   	
 	/**
 	 * Variable: IS_MT
@@ -210,7 +218,7 @@ var mxClient =
 	 *
 	 * True if the client is a Chrome OS.
 	 */
-  	IS_CHROMEOS: /\bCrOS\b/.test(navigator.userAgent),
+  	IS_CHROMEOS: /\bCrOS\b/.test(navigator.appVersion),
 
 	/**
 	 * Variable: IS_TOUCH
@@ -598,17 +606,19 @@ if (mxClient.IS_VML)
 	else
 	{
 		// Enables support for IE8 standards mode. Note that this requires all attributes for VML
-		// elements to be set using direct notation, ie. node.attr = value. The use of setAttribute
-		// is not possible.
-		if (document.documentMode == 8)
+		// elements to be set using direct notation, ie. node.attr = value, not setAttribute.
+		if (document.namespaces != null)
 		{
-			document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml', '#default#VML');
-			document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office', '#default#VML');
-		}
-		else
-		{
-			document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml');
-			document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office');
+			if (document.documentMode == 8)
+			{
+				document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml', '#default#VML');
+				document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office', '#default#VML');
+			}
+			else
+			{
+				document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml');
+				document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office');
+			}
 		}
 
 		// Workaround for limited number of stylesheets in IE (does not work in standards mode)
